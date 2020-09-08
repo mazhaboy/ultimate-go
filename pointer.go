@@ -64,9 +64,21 @@ func main() {
 	// Escape analysis
 	// ---------------
 
-	stayOnStack()
-	escapeToHeap()
+	
+	
+	println(Stay())
+	println(*Heap())
 }
+
+func Stay() int {
+ a:=9
+ return a
+}
+func Heap()*int{
+	a:=4
+	return &a
+}
+
 
 func increment1(inc int) {
 	// Increment the "value of" inc.
@@ -139,6 +151,11 @@ func escapeToHeap() *user {
 
 	return &u
 }
+
+
+
+
+
 
 // ----------------------------------
 // What if we run out of stack space?
