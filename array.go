@@ -146,6 +146,8 @@ func main() {
 
 	// Declare an array of 4 integers that is initialized with some values using literal syntax.
 	numbers := [4]int{10, 20, 30, 40}
+	x := numbers[1:4]
+	fmt.Println(x)
 
 	// Iterate over the array of numbers using traditional style.
 	fmt.Printf("\n=> Iterate over array using traditional style\n")
@@ -158,13 +160,12 @@ func main() {
 	// ---------------------
 
 	// Declare an array of 5 integers that is initialized to its zero value.
-	var five [5]int
 
 	// Declare an array of 4 integers that is initialized with some values.
 	four := [4]int{10, 20, 30, 40}
 
 	fmt.Printf("\n=> Different type arrays\n")
-	fmt.Println(five)
+	fmt.Println(four[0])
 	fmt.Println(four)
 
 	// When we try to assign four to five like so five = four, the compiler says that
