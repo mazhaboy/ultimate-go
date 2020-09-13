@@ -43,7 +43,7 @@ func main() {
 	arr := [10]int{2, 3, 4, 5, 6}
 	fmt.Println(arr)
 	sl := make([]int, 4)
-	)
+	
 
 	fmt.Println(sl)
 
