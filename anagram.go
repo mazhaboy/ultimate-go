@@ -15,11 +15,14 @@ var dic = make(map[string]string)
 func TimeTracker(start time.Time, arg string) {
 	FindAnagram(dic, arg)
 	fmt.Printf(">> It took %v to find the anagrams.", time.Since(start))
-
 }
 
 func main() {
-	arg := os.Args[1]
+	scan := bufio.NewScanner(os.Stdin)
+	fmt.Printf("Enter a word: ")
+	scan.Scan()
+	arg := scan.Text()
+
 	defer TimeTracker(time.Now(), arg)
 	file, err := os.Open("/Users/Aidar/Desktop/words.txt")
 	defer file.Close()
@@ -31,7 +34,9 @@ func main() {
 	for scanner.Scan() {
 		value := scanner.Text()
 		key := SortStr(value)
+		if value!=arg {
 		dic[key] += value + "\n"
+		}
 	}
 
 }
@@ -44,7 +49,11 @@ func SortStr(arg string) string {
 
 }
 func FindAnagram(dic map[string]string, arg string) {
-	fmt.Printf("Find anagrams of %v:\n", arg)
-	fmt.Print(dic[SortStr(arg)])
+
+	a := strings.Split(dic[SortStr(arg)], "\n")
+	fmt.Println("The word", arg, "has the following", len(a)-1, "anagrams:")
+	if val, ok := dic[SortStr(arg)]; ok {
+		fmt.Print(val)
+	}
 
 }
