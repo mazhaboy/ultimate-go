@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 func main() {
 	// array := [5]*int{0: new(int), 1: new(int)}
 	// fmt.Println(array)
@@ -38,16 +36,41 @@ func main() {
 	// var c int = a[0][0]
 	// fmt.Println(c)
 
-	var arr [2]int
-	x := &arr
-	x[0] = 100
-	x[1] = 200
-	fmt.Println(arr)
+	// var arr [2]int
+	// x := &arr
+	// fmt.Println(x)
+	// x[0] = 100
+	// x[1] = 200
+	// fmt.Println(arr)
+
+	// slice := make([]int, 10)
+	// slice[0] = 188
+
+	// fmt.Println(&foo(slice)[0])
+	// fmt.Println(foo(slice))
+	// fmt.Println(&slice[0])
+
+	// dic := make(map[[]string]string)
+	// fmt.Println(dic)
+
+	// v, exists := color["blue"]
+
+	// if exists {
+	// 	fmt.Println(v)
+	// }
+
+	color := map[int]int{}
+
+	for i := 0; i <= 10; i++ {
+		color[i] = i
+	}
+	x := []int{1, 2}
 
 }
 
-// func foo(arr *[2]int){
-// 	for i := range *arr {
-// 		arr[i] = i
-// 	}
+// func foo(a []int) []int {
+
+// 	a = append(a, 500)
+// 	a[0] = 100
+// 	return a
 // }
