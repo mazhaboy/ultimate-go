@@ -1,5 +1,19 @@
 package main
 
+import "fmt"
+
+type user struct {
+	name       string
+	email      string
+	ext        int
+	privileged bool
+}
+type admin struct {
+	person user
+	level  string
+}
+type Duration int64
+
 func main() {
 	// array := [5]*int{0: new(int), 1: new(int)}
 	// fmt.Println(array)
@@ -59,12 +73,36 @@ func main() {
 	// 	fmt.Println(v)
 	// }
 
-	color := map[int]int{}
+	// color := map[int]int{}
 
-	for i := 0; i <= 10; i++ {
-		color[i] = i
-	}
-	x := []int{1, 2}
+	// for i := 0; i <= 10; i++ {
+	// 	color[i] = i
+	// }
+	// x := []int{1, 2}
+
+	// var bill user
+	// fmt.Println(bill)
+
+	// Lisa := user{
+	// 	name:       "Lisa",
+	// 	email:      "lisa@mail.ru",
+	// 	ext:        123,
+	// 	privileged: true,
+	// }
+	// fred := admin{
+	// 	person: user{
+	// 		name:       "Mazha",
+	// 		email:      "mazhitov.t@list.ru",
+	// 		ext:        777,
+	// 		privileged: true,
+	// 	},
+	// 	level: "admin",
+	// }
+	// fmt.Println(Lisa)
+	// fmt.Println(fred)
+	// var d Duration
+	// d = int64(1000)
+	// fmt.Println(d)
 
 }
 
