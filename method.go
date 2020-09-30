@@ -1,35 +1,85 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
+
+type notifier interface {
+	notify()
+}
 
 type user struct {
 	name  string
 	email string
 }
 
-func (u user) notify() {
+type admin struct {
+	user
+	numb int
+}
+
+// type sum struct {
+// 	a int
+// 	b int
+// }
+
+func (u *user) notify() {
 	fmt.Printf("Sending User Email To %s<%s>\n", u.name, u.email)
 }
-
-func (u *user) changeEmail(email string) {
-	u.email = email
+func (u *admin) notify() {
+	fmt.Printf("Sending Admin Email To %s<%s>\n", u.name, u.email)
 }
+
+//func (s user) sum() {
+//fmt.Println(s.name, "and", s.email)
+//}
+
+// func (u *user) changeEmail(email string) {
+// 	u.email = email
+// }
 
 func main() {
-	
-	bill := user{
-		name:  "Bill",
-		email: "bill@email.com",
+
+	// sm := sum{5, 6}
+
+	mazha := admin{
+		user: user{
+			name:  "Bill",
+			email: "bill@email.com",
+		},
+
+		numb: 1998,
 	}
-	bill.notify()
+	mazha.user.notify()
+	mazha.notify()
 
-	lisa := &user{"Lisa", "lisa@email.com"}
-	lisa.notify()
-
-	bill.changeEmail("bill@newdomain.com")
-	bill.notify()
-
-	lisa.changeEmail("lisa@newdomain.com")
-	lisa.notify()
+	send(&mazha)
 
 }
+func send(n notifier) {
+	n.notify()
+}
+
+// func sendSum(n notifier) {
+// 	n.sum()
+// }
+
+// package main
+
+// import "fmt"
+
+// main is the entry point for the application. 13
+// func main() {
+// var b bytes.Bufer
+
+// Write a string to the buffer.
+// b.Write([]byte("Hello"))
+
+// Use Fprintf to concatenate a string to the Buffer.
+// fmt.Fprintf(&b, " World!")
+
+// Write the content of the Buffer to stdout.
+// io.Copy(os.Stdout, &b)
+// 	a := Local
+// 	fmt.Println(a)
+// }

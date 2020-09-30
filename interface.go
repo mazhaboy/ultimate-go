@@ -4,11 +4,6 @@ import (
 	"fmt"
 )
 
-type Geometry interface {
-	Area() float64
-	Perimetr() float64
-}
-
 type Circle struct {
 	r float64
 }
