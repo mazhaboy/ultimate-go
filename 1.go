@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 
-	std "./func"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
-	user := std.User(100)
 
-	fmt.Println(user)
-
+	a, _ := bcrypt.GenerateFromPassword([]byte("hello"), bcrypt.DefaultCost)
+	fmt.Println(string(a))
+	
 }

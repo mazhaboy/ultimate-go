@@ -22,12 +22,13 @@ type admin struct {
 // 	a int
 // 	b int
 // }
+var x notifier
 
 func (u *user) notify() {
 	fmt.Printf("Sending User Email To %s<%s>\n", u.name, u.email)
 }
 func (u *admin) notify() {
-	fmt.Printf("Sending Admin Email To %s<%s>\n", u.name, u.email)
+	fmt.Printf("Sending Admin Email To <%d>\n", u.numb)
 }
 
 //func (s user) sum() {
@@ -41,7 +42,10 @@ func (u *admin) notify() {
 func main() {
 
 	// sm := sum{5, 6}
-
+	x := user{
+		name:  "Bill",
+		email: "bill@email.com",
+	}
 	mazha := admin{
 		user: user{
 			name:  "Bill",
@@ -50,9 +54,8 @@ func main() {
 
 		numb: 1998,
 	}
-	mazha.user.notify()
-	mazha.notify()
 
+	send(&x)
 	send(&mazha)
 
 }
