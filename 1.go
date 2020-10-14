@@ -9,6 +9,9 @@ import (
 func main() {
 
 	a, _ := bcrypt.GenerateFromPassword([]byte("hello"), bcrypt.DefaultCost)
-	fmt.Println(string(a))
-	
+	b := []byte("hello")
+	if err := bcrypt.CompareHashAndPassword(a, b); err == nil {
+		
+	}
+
 }
