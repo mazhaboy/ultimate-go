@@ -1,71 +1,65 @@
 // This sample program demonstrates how to use an unbuffered
-// channel to simulate a game of tennis between two goroutines.
+// channel to simulate a relay race between four goroutines.
 package main
 
 import (
 	"fmt"
-	"math/rand"
 	"sync"
-	"time"§§§wsxv ecs cef 5кс4усачвц паув
+	"time"
 )
 
 // wg is used to wait for the program to finish.
 var wg sync.WaitGroup
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
-
 // main is the entry point for all Go programs.
 func main() {
 	// Create an unbuffered channel.
-	court := make(chan int)
+	baton := make(chan int)
 
-	// Add a count of two, one for each goroutine.
-	wg.Add(2)
+	// Add a count of one for the last runner.
+	wg.Add(1)
 
-	// Launch two players.
-	go player("Nadal", court)
-	go player("Djokovic", court)
+	// First runner to his mark.
+	go Runner(baton)
 
-	// Start the set.
-	court <- 1
+	// Start the race.
+	baton <- 1
 
-	// Wait for the game to finish.
+	// Wait for the race to finish.
 	wg.Wait()
 }
 
-// player simulates a person playing the game of tennis.
-func player(name string, court chan int) {
-	// Schedule the call to Done to tell main we are done.
-	defer wg.Done()
+// Runner simulates a person running in the relay race.
+func Runner(baton chan int) {
+	var newRunner int
 
-	for {
-		// Wait for the ball to be hit back to us.
-		ball, ok := <-court
-		if !ok {
-			// If the channel was closed we won.
-			fmt.Printf("Player %s Won\n", name)
-			return
-		}
+	// Wait to receive the baton.
+	runner := <-baton
 
-		// Pick a random number and see if we miss the ball.
-		n := rand.Intn(100)
-		if n%13 == 0 {
-			fmt.Printf("Player %s Missed\n", name)
+	// Start running around the track.
+	fmt.Printf("Runner %d Running With Baton\n", runner)
 
-			// Close the channel to signal we lost.
-			close(court)
-			return
-		}
-
-		// Display and then increment the hit count by one.
-		fmt.Printf("Player %s Hit %d\n", name, ball)
-		ball++
-
-		// Hit the ball back to the opposing player.
-
-		court <- ball
-
+	// New runner to the line.
+	if runner != 4 {
+		newRunner = runner + 1
+		fmt.Printf("Runner %d To The Line\n", newRunner)
+		go Runner(baton)
 	}
+
+	// Running around the track.
+	time.Sleep(100 * time.Millisecond)
+
+	// Is the race over.
+	if runner == 4 {
+		fmt.Printf("Runner %d Finished, Race Over\n", runner)
+		wg.Done()
+		return
+	}
+
+	// Exchange the baton for the next runner.
+	fmt.Printf("Runner %d Exchange With Runner %d\n",
+		runner,
+		newRunner)
+
+	baton <- newRunner
 }
