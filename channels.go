@@ -1,65 +1,77 @@
-// This sample program demonstrates how to use an unbuffered
-// channel to simulate a relay race between four goroutines.
+// This sample program demonstrates how to use a buffered
+// channel to work on multiple tasks with a predefined number
+// of goroutines.
 package main
 
 import (
 	"fmt"
+	"math/rand"
 	"sync"
 	"time"
+)
+
+const (
+	numberGoroutines = 4  // Number of goroutines to use.
+	taskLoad         = 10 // Amount of work to process.
 )
 
 // wg is used to wait for the program to finish.
 var wg sync.WaitGroup
 
+// init is called to initialize the package by the
+// Go runtime prior to any other code being executed.
+func init() {
+	// Seed the random number generator.
+	rand.Seed(time.Now().Unix())
+}
+
 // main is the entry point for all Go programs.
 func main() {
-	// Create an unbuffered channel.
-	baton := make(chan int)
+	// Create a buffered channel to manage the task load.
+	tasks := make(chan string, taskLoad)
 
-	// Add a count of one for the last runner.
-	wg.Add(1)
+	// Launch goroutines to handle the work.
+	wg.Add(numberGoroutines)
+	for gr := 1; gr <= numberGoroutines; gr++ {
+		go worker(tasks, gr)
+	}
 
-	// First runner to his mark.
-	go Runner(baton)
+	// Add a bunch of work to get done.
+	for post := 1; post <= taskLoad; post++ {
+		tasks <- fmt.Sprintf("Task : %d", post)
+	}
 
-	// Start the race.
-	baton <- 1
+	// Close the channel so the goroutines will quit
+	// when all the work is done.
+	close(tasks)
 
-	// Wait for the race to finish.
+	// Wait for all the work to get done.
 	wg.Wait()
 }
 
-// Runner simulates a person running in the relay race.
-func Runner(baton chan int) {
-	var newRunner int
+// worker is launched as a goroutine to process work from
+// the buffered channel.
+func worker(tasks chan string, worker int) {
+	// Report that we just returned.
+	defer wg.Done()
 
-	// Wait to receive the baton.
-	runner := <-baton
+	for {
+		// Wait for work to be assigned.
+		task, ok := <-tasks
+		if !ok {
+			// This means the channel is empty and closed.
+			fmt.Printf("Worker: %d : Shutting Down\n", worker)
+			return
+		}
 
-	// Start running around the track.
-	fmt.Printf("Runner %d Running With Baton\n", runner)
+		// Display we are starting the work.
+		fmt.Printf("Worker: %d : Started %s\n", worker, task)
 
-	// New runner to the line.
-	if runner != 4 {
-		newRunner = runner + 1
-		fmt.Printf("Runner %d To The Line\n", newRunner)
-		go Runner(baton)
+		// Randomly wait to simulate work time.
+		sleep := rand.Int63n(100)
+		time.Sleep(time.Duration(sleep) * time.Millisecond)
+
+		// Display we finished the work.
+		fmt.Printf("Worker: %d : Completed %s\n", worker, task)
 	}
-
-	// Running around the track.
-	time.Sleep(100 * time.Millisecond)
-
-	// Is the race over.
-	if runner == 4 {
-		fmt.Printf("Runner %d Finished, Race Over\n", runner)
-		wg.Done()
-		return
-	}
-
-	// Exchange the baton for the next runner.
-	fmt.Printf("Runner %d Exchange With Runner %d\n",
-		runner,
-		newRunner)
-
-	baton <- newRunner
 }
