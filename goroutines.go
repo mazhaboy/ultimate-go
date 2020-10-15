@@ -6,40 +6,34 @@ import (
 	"sync"
 )
 
-var wg sync.WaitGroup
+var (
+	wg      sync.WaitGroup
+	counter int
+	mutex   sync.Mutex
+)
 
 func main() {
-
-	fmt.Println(runtime.GOMAXPROCS(runtime.NumCPU()))
-
 	wg.Add(2)
-	fmt.Println("create go routine")
+	go incCounter(1)
+	go incCounter(2)
 
-	// go printPrime("A")
-	// go printPrime("B")
-	fmt.Println("Waiting to finish")
-
-	go func() {
-		defer wg.Done()
-		for count := 0; count < 3; count++ {
-			for char := 'a'; char < 'a'+26; char++ {
-				fmt.Printf("%c ", char)
-			}
-		}
-	}()
-
-	go func() {
-		defer wg.Done()
-
-		for count := 0; count < 3; count++ {
-			for char := 'A'; char < 'A'+26; char++ {
-				fmt.Printf("%c ", char)
-			}
-		}
-	}()
 	wg.Wait()
-	fmt.Println("\nTerminating program")
+	fmt.Println("Final Counter: ", counter)
 
+}
+func incCounter(id int) {
+	defer wg.Done()
+	for count := 0; count < 2; count++ {
+		mutex.Lock()
+		{
+			value := counter
+			runtime.Gosched()
+			value++
+			counter = value
+		}
+		mutex.Unlock()
+
+	}
 }
 
 // func printPrime(prefix string) {
